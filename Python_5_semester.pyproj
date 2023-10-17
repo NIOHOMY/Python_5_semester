@@ -22,7 +22,41 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BankController.py" />
+    <Compile Include="Controllers\__init__.py" />
+    <Compile Include="Interface\BanksMenu\bank_menu.py" />
+    <Compile Include="Interface\BanksMenu\create_bank_menu.py" />
+    <Compile Include="Interface\BanksMenu\delete_bank_menu.py" />
+    <Compile Include="Interface\BanksMenu\SelectedBankMenu\bank_menu_selected_bank.py" />
+    <Compile Include="Interface\BanksMenu\SelectedBankMenu\delete_client_menu.py" />
+    <Compile Include="Interface\BanksMenu\SelectedBankMenu\register_client_menu.py" />
+    <Compile Include="Interface\BanksMenu\SelectedBankMenu\__init__.py" />
+    <Compile Include="Interface\BanksMenu\select_bank_menu.py" />
+    <Compile Include="Interface\BanksMenu\__init__.py" />
+    <Compile Include="Interface\ClientsMenu\client_menu.py" />
+    <Compile Include="Interface\ClientsMenu\SelectedClientMenu\client_menu_selected_client.py" />
+    <Compile Include="Interface\ClientsMenu\SelectedClientMenu\deposit_money_menu.py" />
+    <Compile Include="Interface\ClientsMenu\SelectedClientMenu\transfer_money_menu.py" />
+    <Compile Include="Interface\ClientsMenu\SelectedClientMenu\withdraw_money_menu.py" />
+    <Compile Include="Interface\ClientsMenu\SelectedClientMenu\__init__.py" />
+    <Compile Include="Interface\ClientsMenu\select_client_menu.py" />
+    <Compile Include="Interface\ClientsMenu\create_client_menu.py" />
+    <Compile Include="Interface\ClientsMenu\delete_client_menu.py" />
+    <Compile Include="Interface\ClientsMenu\__init__.py" />
+    <Compile Include="Interface\Tools\print_banks.py" />
+    <Compile Include="Interface\Tools\print_banks_by_indices.py" />
+    <Compile Include="Interface\Tools\print_banks_clients.py" />
+    <Compile Include="Interface\Tools\print_clients.py" />
+    <Compile Include="Interface\Tools\__init__.py" />
+    <Compile Include="Models\Account.py" />
+    <Compile Include="Models\Bank.py" />
+    <Compile Include="Models\Client.py" />
+    <Compile Include="Models\Persons\LegalPerson.py" />
+    <Compile Include="Models\Persons\PhysicalPerson.py" />
+    <Compile Include="Models\Persons\__init__.py" />
+    <Compile Include="Models\__init__.py" />
     <Compile Include="Python_5_semester.py" />
+    <Compile Include="TODO.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
@@ -37,6 +71,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Задача 2.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Interface\BanksMenu\" />
+    <Folder Include="Interface\BanksMenu\SelectedBankMenu\" />
+    <Folder Include="Interface\ClientsMenu\" />
+    <Folder Include="Interface\ClientsMenu\SelectedClientMenu\" />
+    <Folder Include="Interface\Tools\" />
+    <Folder Include="Models\" />
+    <Folder Include="Models\Persons\" />
+    <Folder Include="Interface\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
