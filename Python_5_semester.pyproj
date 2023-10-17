@@ -22,6 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="lab3.py" />
     <Compile Include="Python_5_semester.py" />
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +35,19 @@
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
     </Interpreter>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="cmd.txt" />
+    <Content Include="file.txt" />
+    <Content Include="file1.txt" />
+    <Content Include="statistics.txt" />
+    <Content Include="__pycache__\bubble_sort.cpython-39.pyc" />
+    <Content Include="__pycache__\factorial.cpython-39.pyc" />
+    <Content Include="__pycache__\profile_decorator.cpython-39.pyc" />
+    <Content Include="__pycache__\tools.cpython-39.pyc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="__pycache__\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -1,0 +1,5 @@
+"C:\Program Files (x86)\Microsoft Visual Studio\Shared\Python39_64\python.exe" lab3.py file.txt
+
+E:
+cd 0Projects\Python\lab4
+python -m unittest Python_5_semester.py

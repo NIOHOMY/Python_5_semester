@@ -1,0 +1,6 @@
+def test_read_nonexistent_file(self):
+    # Test reading a file that does not exist
+    with patch('builtins.open', side_effect=OSError):
+        with self.assertRaises(Exception):
+            lab3.read_file("nonexistent.txt")
+    print("- Test nonexistent read_file passed")
