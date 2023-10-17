@@ -22,7 +22,11 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="bubble_sort.py" />
+    <Compile Include="factorial.py" />
+    <Compile Include="profile_decorator.py" />
     <Compile Include="Python_5_semester.py" />
+    <Compile Include="tools.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
