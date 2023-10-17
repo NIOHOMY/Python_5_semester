@@ -1,0 +1,3 @@
+E:
+cd E:\0Projects\Python\lab3\v0
+"E:\Programs\VS\Tools\Python39_64\python.exe" lab3.py file.txt

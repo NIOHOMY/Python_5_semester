@@ -1,0 +1,5 @@
+This is a test file.
+It contains some words for testing.
+The most frequent word should be "file".
+The number of words in this file is 30.
+There are 172 characters in total.

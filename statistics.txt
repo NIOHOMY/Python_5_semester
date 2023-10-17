@@ -1,0 +1,3 @@
+Most frequent word: one
+Number of words: 4
+Number of characters: 22
