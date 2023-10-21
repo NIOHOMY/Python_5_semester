@@ -11,6 +11,7 @@ class Bank:
 
     def add_client(self, client):
         if client not in self.clients:
+            client.add_account(Account(self))
             self.clients.append(client)
             return True
         else:
@@ -18,18 +19,26 @@ class Bank:
 
     def remove_client(self, client):
         if client in self.clients:
+            client.delete_account(self)
             self.clients.remove(client)
 
     def transfer_money(self, sender, receiver_bank, receiver, amount):
-        if (sender != receiver and
+        sender_account = sender.get_bank_account(self)
+        receiver_account = receiver.get_bank_account(receiver_bank)
+        if (
             isinstance(sender, Client) and
             isinstance(receiver, Client) and
-            sender.account.balance >= amount and
-            (isinstance(sender, LegalPerson) or self == receiver_bank)):
-        
-            sender.account.withdraw(amount)
+            sender_account.balance >= amount and
+            ((isinstance(sender, LegalPerson)and ((sender == receiver)and(self != receiver_bank)) or (sender != receiver)) 
+             or (sender != receiver and self == receiver_bank) 
+             or (sender == receiver and self != receiver_bank))):
+            
+            
+            sender_account.withdraw(amount)
             receiver_bank.receive_transfer(amount)
-            receiver.account.deposit(amount)
+            self.collect_transfer_fee(self.calculate_transfer_fee(amount))
+            self.own_funds -= amount
+            receiver_account.deposit(amount)
             return True
         else:
             return False

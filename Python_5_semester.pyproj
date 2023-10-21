@@ -70,6 +70,7 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Interface\Tools\choose_account.py" />
     <Content Include="Задача 2.pdf" />
   </ItemGroup>
   <ItemGroup>
