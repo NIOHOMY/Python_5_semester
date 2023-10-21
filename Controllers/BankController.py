@@ -64,27 +64,24 @@ class BankController:
     def withdraw_money(self, client_id, amount):
         client = self.select_client(client_id)
         if client:
-            client.account.withdraw(amount)
-            return True
+            return client.account.withdraw(amount)
         else:
             return False
         
-    def transfer_money(self, sender_id, sender_bank_id, receiver_id, amount , receiver_bank_id=None):
+    def transfer_money(self, sender_id, sender_bank_id, receiver_id, amount, receiver_bank_id=None):
         sender_bank = self.select_bank(sender_bank_id)
         sender = self.select_client(sender_id)
         
+        if not sender_bank or not sender:
+            return False
+            
         if not receiver_bank_id:
             receiver_bank_id = sender_bank_id
-
-        if sender_bank and sender:
-            if receiver_bank_id:  
-                receiver_bank = self.select_bank(receiver_bank_id)
-                receiver = self.select_client(receiver_id)
-                if receiver_bank and receiver:
-                    return sender_bank.transfer_money(sender, receiver_bank, receiver, amount)
-            else:  
-                receiver = self.select_client(receiver_id)
-                if receiver:
-                    return sender_bank.transfer_money(sender, sender_bank, receiver, amount)
+        
+        receiver_bank = self.select_bank(receiver_bank_id)
+        receiver = self.select_client(receiver_id)
+        
+        if receiver_bank and receiver:
+            return sender_bank.transfer_money(sender, receiver_bank, receiver, amount)
             
         return False

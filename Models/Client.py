@@ -9,13 +9,13 @@ class Client:
         self.bank_accounts.append(account)
         
     def delete_account(self, bank):
-        for account in self.bank_account:
+        for account in self.bank_accounts:
             if account.get_bank() == bank:
                 self.bank_accounts.remove(account)
+                return
         
-    def get_bank_account(self,bank):
+    def get_bank_account(self, bank):
         for account in self.bank_accounts:
             if account.get_bank() == bank:
                 return account
-            
-         
+        return None

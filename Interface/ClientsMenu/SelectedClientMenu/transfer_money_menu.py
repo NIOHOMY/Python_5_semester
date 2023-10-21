@@ -8,34 +8,33 @@ def transfer_money_menu(controller, sender, sender_id):
     print_clients(controller)
     receiver_id = input("Выберите ID получателя: ")
     receiver = controller.select_client(int(receiver_id))
-    
+
     if receiver:
         banks_with_sender = []
         for index, bank in enumerate(controller.banks):
             if sender in bank.clients:
                 banks_with_sender.append(index)
-                
+
         if len(banks_with_sender) >= 1:
             print("Банк отправителя:")
             print_banks_by_indices(controller, banks_with_sender)
             sender_bank_id = input("Выберите ID банка отправителя: ")
         else:
-            
             sender_bank_id = None
-            
+
         if sender_bank_id:
             banks_with_receiver = []
             for index, bank in enumerate(controller.banks):
                 if receiver in bank.clients:
                     banks_with_receiver.append(index)
-                    
+
             if len(banks_with_receiver) >= 1:
                 print("Банк получателя:")
                 print_banks_by_indices(controller, banks_with_receiver)
                 receiver_bank_id = input("Выберите ID банка получателя: ")
             else:
-                receiver_bank_id = None              
-                
+                receiver_bank_id = None
+
             if sender_bank_id and receiver_bank_id is not None:
                 amount = float(input("Введите сумму в рублях: "))
                 if controller.transfer_money(int(sender_id), int(sender_bank_id), int(receiver_id), amount, int(receiver_bank_id)):
@@ -43,8 +42,8 @@ def transfer_money_menu(controller, sender, sender_id):
                 else:
                     print("Ошибка при переводе средств.")
             else:
-                print("Получатель не зарегестрированы ни в одном банке.")
+                print("Получатель не зарегистрирован ни в одном банке.")
         else:
-            print("Отправитель не зарегестрированы ни в одном банке.")
+            print("Отправитель не зарегистрирован ни в одном банке.")
     else:
         print("Неверный ID получателя.")

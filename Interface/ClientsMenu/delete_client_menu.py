@@ -6,7 +6,11 @@ def delete_client_menu(controller):
     print_clients(controller)
     client_id = input("Выберите ID клиента для удаления: ")
     client = controller.select_client(int(client_id))
-    if client and controller.delete_client(client):
-        print(f"Клиент '{client.name}' успешно удален.")
+    
+    if client:
+        if controller.delete_client(client):
+            print(f"Клиент '{client.name}' успешно удален.")
+        else:
+            print("Ошибка при удалении клиента.")
     else:
-        print("Ошибка при удалении клиента.")
+        print("Неверный ID клиента.")

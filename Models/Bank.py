@@ -1,4 +1,4 @@
-from Models.Client import Client
+﻿from Models.Client import Client
 from Models.Account import Account
 from Models.Persons.LegalPerson import LegalPerson
 from Models.Persons.PhysicalPerson import PhysicalPerson
@@ -25,15 +25,24 @@ class Bank:
     def transfer_money(self, sender, receiver_bank, receiver, amount):
         sender_account = sender.get_bank_account(self)
         receiver_account = receiver.get_bank_account(receiver_bank)
+        
         if (
             isinstance(sender, Client) and
             isinstance(receiver, Client) and
+            sender_account and receiver_account and  # Проверяем, что у отправителя и получателя есть счета в соответствующих банках
             sender_account.balance >= amount and
-            ((isinstance(sender, LegalPerson)and ((sender == receiver)and(self != receiver_bank)) or (sender != receiver)) 
-             or (sender != receiver and self == receiver_bank) 
-             or (sender == receiver and self != receiver_bank))):
-            
-            
+            (
+                (
+                    isinstance(sender, LegalPerson) and (sender != receiver) and (self != receiver_bank)
+                ) or
+                (
+                    sender != receiver and self == receiver_bank
+                ) or
+                (
+                    sender == receiver and self != receiver_bank
+                )
+            )
+        ):
             sender_account.withdraw(amount)
             receiver_bank.receive_transfer(amount)
             self.collect_transfer_fee(self.calculate_transfer_fee(amount))

@@ -7,7 +7,11 @@ def register_client_menu(controller, bank):
     print_clients(controller)
     client_id = input("Выберите ID клиента для регистрации: ")
     client = controller.select_client(int(client_id))
-    if client and bank.add_client(client):
-        print(f"Клиент '{client.name}' успешно зарегистрирован в банке '{bank.name}'.")
+    
+    if client:
+        if bank.add_client(client):
+            print(f"Клиент '{client.name}' успешно зарегистрирован в банке '{bank.name}'.")
+        else:
+            print("Ошибка при регистрации клиента.")
     else:
-        print("Ошибка при регистрации клиента.")
+        print("Неверный ID клиента.")

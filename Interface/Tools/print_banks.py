@@ -6,5 +6,7 @@ def print_banks(controller):
     if banks:
         for index, bank in enumerate(banks):
             print(f"ID: {index}, Имя: {bank.name}")
+        return True
     else:
         print("Список банков пуст.")
+        return False

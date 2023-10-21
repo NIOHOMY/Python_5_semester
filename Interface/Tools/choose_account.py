@@ -1,4 +1,8 @@
-﻿def choose_account(client):
+﻿from Models.Client import Client
+from Models.Bank import Bank
+from Controllers.BankController import BankController
+
+def choose_account(client):
     """
     Функция выводит список счетов клиента в разных банках и позволяет выбрать нужный счет.
     :param client: объект класса Client
@@ -8,7 +12,7 @@
     print("Список ваших счетов:")
     for index, account in enumerate(client.bank_accounts):
         account_map[index + 1] = account  # Добавляем элемент в отображение
-        print(f"{index + 1}) Банк: {account.bank.name}")
+        print(f"{index + 1}) Банк: {account.get_bank().name}")
     
     if len(account_map) == 0:
         print("У вас нет открытых счетов.")

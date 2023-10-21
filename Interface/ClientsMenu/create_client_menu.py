@@ -7,8 +7,13 @@ def create_client_menu(controller):
     print("1: Физическое лицо")
     print("2: Юридическое лицо")
     client_type = input("Выберите тип клиента: ")
-    client = controller.create_client(name, int(client_type))
-    if client:
-        print(f"Клиент '{client.name}' успешно создан.")
+
+    if client_type in ["1", "2"]:
+        client = controller.create_client(name, int(client_type))
+        
+        if client:
+            print(f"Клиент '{client.name}' успешно создан.")
+        else:
+            print("Ошибка при создании клиента.")
     else:
-        print("Ошибка при создании клиента.")
+        print("Неверный тип клиента.")
