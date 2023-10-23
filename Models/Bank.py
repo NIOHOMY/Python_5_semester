@@ -43,11 +43,12 @@ class Bank:
                 )
             )
         ):
-            sender_account.withdraw(amount)
-            receiver_bank.receive_transfer(amount)
-            self.collect_transfer_fee(self.calculate_transfer_fee(amount))
+            fee = self.calculate_transfer_fee(amount)
+            sender_account.withdraw(amount+fee)
+            receiver_bank.receive_transfer(amount-fee)
+            self.collect_transfer_fee(fee)
             self.own_funds -= amount
-            receiver_account.deposit(amount)
+            receiver_account.deposit(amount-fee)
             return True
         else:
             return False

@@ -53,18 +53,16 @@ class BankController:
         else:
             return None
         
-    def deposit_money(self, client_id, amount):
-        client = self.select_client(client_id)
-        if client:
-            client.account.deposit(amount)
+    def deposit_money(self, account, amount):
+        if account and amount>=0:
+            account.deposit(amount)
             return True
         else:
             return False
         
-    def withdraw_money(self, client_id, amount):
-        client = self.select_client(client_id)
-        if client:
-            return client.account.withdraw(amount)
+    def withdraw_money(self, account, amount):
+        if account and amount>=0:
+            return account.withdraw(amount)
         else:
             return False
         
@@ -85,3 +83,14 @@ class BankController:
             return sender_bank.transfer_money(sender, receiver_bank, receiver, amount)
             
         return False
+    def get_bank_id(self, bank):
+        for idx, b in enumerate(self.banks):
+            if b == bank:
+                return idx
+        return None
+    def get_client_id(self, client):
+        for idx, c in enumerate(self.clients):
+            if c == client:
+                return idx
+        return None
+

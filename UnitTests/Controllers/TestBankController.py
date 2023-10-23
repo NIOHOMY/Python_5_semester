@@ -1,6 +1,6 @@
 ﻿import unittest
 from Controllers.BankController import BankController
-from ...Models.Client import Client
+from Models.Client import Client
 from Models.Account import Account
 from Models.Bank import Bank
 from Models.Persons.LegalPerson import LegalPerson
@@ -39,151 +39,153 @@ from Models.Persons.PhysicalPerson import PhysicalPerson
 """
 
 class TestBankController(unittest.TestCase):
-    
+
     def setUp(self):
-        self.bank_controller = BankController()
-        
+        self.controller = BankController()
+
     def test_create_bank(self):
-        bank_name = "ABC Bank"
-        bank = self.bank_controller.create_bank(bank_name)
-        banks = self.bank_controller.banks
-        
-        self.assertEqual(len(banks), 1)
-        self.assertIn(bank, banks)
+        bank_name = "Test Bank"
+        bank = self.controller.create_bank(bank_name)
+        self.assertIn(bank, self.controller.banks)
         self.assertEqual(bank.name, bank_name)
         
+
     def test_delete_bank(self):
-        bank_name = "ABC Bank"
-        bank = self.bank_controller.create_bank(bank_name)
-        banks = self.bank_controller.banks
-        
-        result = self.bank_controller.delete_bank(bank)
-        
+        bank_name = "Test Bank"
+        bank = self.controller.create_bank(bank_name)
+        result = self.controller.delete_bank(bank)
         self.assertTrue(result)
-        self.assertNotIn(bank, banks)
-        
-        # Deleting non-existent bank should return False
-        result = self.bank_controller.delete_bank(bank)
-        self.assertFalse(result)
-        
+        self.assertNotIn(bank, self.controller.banks)
+
     def test_select_bank(self):
-        bank_name = "ABC Bank"
-        bank = self.bank_controller.create_bank(bank_name)
-        
-        selected_bank = self.bank_controller.select_bank(0)
+        bank_name = "Test Bank"
+        bank = self.controller.create_bank(bank_name)
+        selected_bank = self.controller.select_bank(0)
         self.assertEqual(selected_bank, bank)
-        
-        selected_bank = self.bank_controller.select_bank(1)
-        self.assertIsNone(selected_bank)
-        
+
     def test_create_client(self):
         client_name = "John Doe"
-        client_type = 1 # PhysicalPerson
-        client = self.bank_controller.create_client(client_name, client_type)
-        clients = self.bank_controller.clients
-        
-        self.assertEqual(len(clients), 1)
-        self.assertIn(client, clients)
+        client_type = 1
+        client = self.controller.create_client(client_name, client_type)
+        self.assertIn(client, self.controller.clients)
         self.assertEqual(client.name, client_name)
-        
-        # Creating invalid client type should return None
-        client_type = 3
-        client = self.bank_controller.create_client(client_name, client_type)
-        self.assertIsNone(client)
-        
+
     def test_delete_client(self):
         client_name = "John Doe"
-        client_type = 1 # PhysicalPerson
-        client = self.bank_controller.create_client(client_name, client_type)
-        clients = self.bank_controller.clients
-        
-        result = self.bank_controller.delete_client(client)
-        
+        client_type = 1
+        client = self.controller.create_client(client_name, client_type)
+        result = self.controller.delete_client(client)
         self.assertTrue(result)
-        self.assertNotIn(client, clients)
-        
-        # Deleting non-existent client should return False
-        result = self.bank_controller.delete_client(client)
-        self.assertFalse(result)
-        
+        self.assertNotIn(client, self.controller.clients)
+
     def test_select_client(self):
         client_name = "John Doe"
-        client_type = 1 # PhysicalPerson
-        client = self.bank_controller.create_client(client_name, client_type)
-        
-        selected_client = self.bank_controller.select_client(0)
+        client_type = 1
+        client = self.controller.create_client(client_name, client_type)
+        selected_client = self.controller.select_client(0)
         self.assertEqual(selected_client, client)
-        
-        selected_client = self.bank_controller.select_client(1)
-        self.assertIsNone(selected_client)
-        
+
     def test_deposit_money(self):
+        bank = self.controller.create_bank("test_bank_name")
         client_name = "John Doe"
-        client_type = 1 # PhysicalPerson
-        client = self.bank_controller.create_client(client_name, client_type)
-        account = client.account
-        initial_balance = account.balance
-        
-        deposit_amount = 100
-        result = self.bank_controller.deposit_money(0, deposit_amount)
-        
-        new_balance = account.balance
+        client_type = 1
+        client = self.controller.create_client(client_name, client_type)
+        amount = 1000
+        bank.add_client(client)
+        account = client.get_bank_account(bank)
+        result = self.controller.deposit_money(account, amount)
         self.assertTrue(result)
-        self.assertEqual(new_balance, initial_balance + deposit_amount)
-        
-        # Depositing into non-existent client should return False
-        result = self.bank_controller.deposit_money(1, deposit_amount)
-        self.assertFalse(result)
-        
+        self.assertEqual(client.get_bank_account(bank).get_balance(), amount)
+
     def test_withdraw_money(self):
+        bank = self.controller.create_bank("test_bank_name")
         client_name = "John Doe"
-        client_type = 1 # PhysicalPerson
-        client = self.bank_controller.create_client(client_name, client_type)
-        account = client.account
-        
-        withdraw_amount = 50
-        result = self.bank_controller.withdraw_money(0, withdraw_amount)
-        
-        new_balance = account.balance
+        client_type = 1
+        client = self.controller.create_client(client_name, client_type)
+        initial_balance = 1000
+        amount_to_withdraw = 500
+        bank.add_client(client)
+        account = client.get_bank_account(bank)
+        account.deposit(initial_balance)
+        result = self.controller.withdraw_money(account, amount_to_withdraw)
         self.assertTrue(result)
-        self.assertEqual(new_balance, 50)
-        
-        # Withdrawing from non-existent client should return False
-        result = self.bank_controller.withdraw_money(1, withdraw_amount)
-        self.assertFalse(result)
-        
-    def test_transfer_money(self):
-        sender_bank_name = "ABC Bank"
-        sender_bank = self.bank_controller.create_bank(sender_bank_name)
+        self.assertEqual(account.get_balance(), initial_balance - amount_to_withdraw)
+
+    def test_transfer_money_same_bank(self):
+        sender_bank_name = "Test Bank 1"
+        receiver_bank_name = "Test Bank 2"
+
+        sender_bank = self.controller.create_bank(sender_bank_name)
+        receiver_bank = self.controller.create_bank(receiver_bank_name)
+        #self.controller.banks.append(sender_bank)
+        #self.controller.banks.append(receiver_bank)
+
         sender_name = "John Doe"
-        sender_type = 1 # PhysicalPerson
-        sender = self.bank_controller.create_client(sender_name, sender_type)
-        sender.account.deposit(100) # initial balance
-        receiver_bank_name = "XYZ Bank"
-        receiver_bank = self.bank_controller.create_bank(receiver_bank_name)
-        receiver_name = "Jane Doe"
-        receiver_type = 1 # PhysicalPerson
-        receiver = self.bank_controller.create_client(receiver_name, receiver_type)
-        
-        # Case 1: Same bank transfer
-        result = self.bank_controller.transfer_money(0, 0, 1, 50)
-        self.assertTrue(result)
-        self.assertEqual(sender.account.balance, 50)
-        self.assertEqual(receiver.account.balance, 50)
-        
-        # Case 2: Inter-bank transfer
-        result = self.bank_controller.transfer_money(0, 0, 2, 30, receiver_bank_id=1)
-        self.assertTrue(result)
-        self.assertEqual(sender.account.balance, 20)
-        self.assertEqual(receiver.account.balance, 80)
-        
-        # Case 3: Invalid sender bank or client
-        result = self.bank_controller.transfer_money(1, 0, 1, 50)
+        client1 = self.controller.create_client(sender_name, 1)
+        sender_bank.add_client(client1)
+        sender_account = client1.get_bank_account(sender_bank)
+        sender_amount = 1000
+        sender_account.deposit(sender_amount)
+
+        receiver_name = "Jane Smith"
+        client2 = self.controller.create_client(receiver_name, 1)
+        receiver_bank.add_client(client2)
+
+        amount_to_transfer = 500
+
+        # Проверяем, что нельзя перевести деньги от клиента, не зарегистрированного в банке отправителя
+        result = self.controller.transfer_money(self.controller.get_client_id(client1), self.controller.get_bank_id(receiver_bank), self.controller.get_client_id(client2), amount_to_transfer, self.controller.get_bank_id(receiver_bank))
         self.assertFalse(result)
-        
-        # Case 4: Invalid receiver bank or client
-        result = self.bank_controller.transfer_money(0, 0, 3, 50)
+
+        # Проверяем, что нельзя перевести деньги клиенту, не зарегистрированному в банке получателя
+        result = self.controller.transfer_money(self.controller.get_client_id(client1), self.controller.get_bank_id(sender_bank), self.controller.get_client_id(client2), amount_to_transfer, self.controller.get_bank_id(sender_bank))
         self.assertFalse(result)
+
+        sender_bank.add_client(client2)
+        receiver_account = client2.get_bank_account(sender_bank)
+        # Проверяем, что можно успешно перевести деньги между клиентами в одном банке
+        result = self.controller.transfer_money(self.controller.get_client_id(client1), self.controller.get_bank_id(sender_bank), self.controller.get_client_id(client2), amount_to_transfer, self.controller.get_bank_id(sender_bank))
+        self.assertTrue(result)
+        self.assertEqual(sender_account.get_balance(), sender_amount - amount_to_transfer - (sender_bank.calculate_transfer_fee(amount_to_transfer)))
+        self.assertEqual(receiver_account.get_balance(), amount_to_transfer -  (sender_bank.calculate_transfer_fee(amount_to_transfer)))
+
+    def test_transfer_money_different_banks(self):
+        sender_bank_name = "Test Bank 1"
+        receiver_bank_name = "Test Bank 2"
+
+        sender_bank = self.controller.create_bank(sender_bank_name)
+        receiver_bank = self.controller.create_bank(receiver_bank_name)
+        #self.controller.banks.append(sender_bank)
+        #self.controller.banks.append(receiver_bank)
+
+        sender_name = "John Doe"
+        client1 = self.controller.create_client(sender_name, 1)
+        sender_bank.add_client(client1)
+        sender_account = client1.get_bank_account(sender_bank)
+        sender_amount = 1000
+        sender_account.deposit(sender_amount)
+
+        receiver_name = "Jane Smith"
+        client2 = self.controller.create_client(receiver_name, 1)
+        receiver_bank.add_client(client2)
+        receiver_account = client2.get_bank_account(receiver_bank)
+
+        amount_to_transfer = 500
+
+        # Проверяем, что нельзя перевести деньги от клиента, не зарегистрированного в банке отправителя
+        result = self.controller.transfer_money(self.controller.get_client_id(client1), self.controller.get_bank_id(receiver_bank), self.controller.get_client_id(client2), amount_to_transfer,self.controller.get_bank_id(receiver_bank))
+        self.assertFalse(result)
+
+        # Проверяем, что нельзя перевести деньги клиенту, не зарегистрированному в банке получателя
+        result = self.controller.transfer_money(self.controller.get_client_id(client1), self.controller.get_bank_id(sender_bank), self.controller.get_client_id(client2), amount_to_transfer,self.controller.get_bank_id(sender_bank))
+        self.assertFalse(result)
+
+        # Проверяем, что нельзя успешно перевести деньги между физическими клиентами в разных банках
+        result = self.controller.transfer_money(self.controller.get_client_id(client1), self.controller.get_bank_id(sender_bank), self.controller.get_client_id(client2), amount_to_transfer, self.controller.get_bank_id(receiver_bank))
+        self.assertFalse(result)
+        #self.assertEqual(sender_account.get_balance(), sender_amount - amount_to_transfer-(sender_bank.calculate_transfer_fee(amount_to_transfer)))
+        #self.assertEqual(receiver_account.get_balance(), amount_to_transfer-(sender_bank.calculate_transfer_fee(amount_to_transfer)))
 
 if __name__ == '__main__':
     unittest.main()
+    

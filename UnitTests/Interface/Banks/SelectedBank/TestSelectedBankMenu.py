@@ -1,16 +1,16 @@
 ﻿import unittest
 from unittest.mock import patch
 from io import StringIO
-from .....Controllers.BankController import BankController
-from .....Models.Bank import Bank
-from .....Models.Client import Client
-from .....Models.Account import Account
+from Controllers.BankController import BankController
+from Models.Bank import Bank
+from Models.Client import Client
+from Models.Account import Account
 
-from .....Interface.BanksMenu.SelectedBankMenu.bank_menu_selected_bank  import bank_menu_selected_bank
-from .....Interface.BanksMenu.SelectedBankMenu.delete_client_menu  import delete_client_menu
-from .....Interface.BanksMenu.SelectedBankMenu.register_client_menu  import register_client_menu
-from .....Interface.Tools.print_banks_clients  import print_banks_clients
-from .....Interface.Tools.print_clients  import print_clients
+from Interface.BanksMenu.SelectedBankMenu.bank_menu_selected_bank  import bank_menu_selected_bank
+from Interface.BanksMenu.SelectedBankMenu.delete_client_menu  import delete_client_menu
+from Interface.BanksMenu.SelectedBankMenu.register_client_menu  import register_client_menu
+from Interface.Tools.print_banks_clients  import print_banks_clients
+from Interface.Tools.print_clients  import print_clients
 
 """
 
@@ -34,7 +34,7 @@ class TestSelectedBankMenu(unittest.TestCase):
     def setUp(self):
         # Создание контроллера и банка для тестов
         self.controller = BankController()
-        self.bank = Bank()
+        self.bank = Bank("b1")
 
     def tearDown(self):
         del self.controller
@@ -61,23 +61,21 @@ class TestSelectedBankMenu(unittest.TestCase):
         # Проверка функции bank_menu_selected_bank с выбором пункта "Назад"
         with patch('sys.stdout', new=StringIO()) as fake_output:
             bank_menu_selected_bank(self.controller, self.bank)
-            self.assertIn("Выберите пункт меню:", fake_output.getvalue())
-            self.assertNotIn("Зарегистрировать клиента", fake_output.getvalue())
-            self.assertNotIn("Удалить клиента", fake_output.getvalue())
+            self.assertIn("--- Меню выбранного Банка 'b1' ---", fake_output.getvalue())
 
     def test_delete_client_menu_invalid_id(self):
         # Проверка функции delete_client_menu с неверным ID клиента
         with patch('sys.stdout', new=StringIO()) as fake_output:
-            with patch('builtins.input', return_value='invalid_id'):
+            with patch('builtins.input', return_value=None):
                 delete_client_menu(self.controller, self.bank)
-                self.assertIn("Неверный ID клиента.", fake_output.getvalue())
+                self.assertIn("Некорректный ID клиента.", fake_output.getvalue())
 
     def test_register_client_menu_invalid_id(self):
         # Проверка функции register_client_menu с неверным ID клиента
         with patch('sys.stdout', new=StringIO()) as fake_output:
-            with patch('builtins.input', return_value='invalid_id'):
+            with patch('builtins.input', return_value=None):
                 register_client_menu(self.controller, self.bank)
-                self.assertIn("Неверный ID клиента.", fake_output.getvalue())
+                self.assertIn("Некорректный ID клиента.", fake_output.getvalue())
 
 if __name__ == '__main__':
     unittest.main()

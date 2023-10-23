@@ -6,5 +6,7 @@ def create_bank_menu(controller):
     
     if bank:
         print(f"Банк '{bank.name}' успешно создан.")
+        return controller.get_bank_id(bank)
     else:
         print("Ошибка при создании банка.")
+        return None

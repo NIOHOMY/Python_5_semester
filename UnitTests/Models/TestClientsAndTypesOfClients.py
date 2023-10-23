@@ -1,9 +1,9 @@
 ﻿import unittest
-from ...Models.Bank import Bank
-from ...Models.Client import Client
-from ...Models.Persons.LegalPerson import  LegalPerson
-from ...Models.Persons.PhysicalPerson import PhysicalPerson
-from ...Models.Account import Account
+from Models.Bank import Bank
+from Models.Client import Client
+from Models.Persons.LegalPerson import  LegalPerson
+from Models.Persons.PhysicalPerson import PhysicalPerson
+from Models.Account import Account
 
 """
 Для класса Client:

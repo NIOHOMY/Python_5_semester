@@ -21,3 +21,6 @@
         
     def get_bank(self):
         return self.bank
+    def get_balance(self):
+        return self.balance
+    
