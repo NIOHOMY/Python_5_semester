@@ -10,9 +10,12 @@ class BankController:
         self.clients = []
 
     def create_bank(self, name):
-        bank = Bank(name)
-        self.banks.append(bank)
-        return bank
+        if name != None and name != "":
+            bank = Bank(name)
+            self.banks.append(bank)
+            return bank
+        else:
+            return None
 
     def delete_bank(self, bank):
         if bank in self.banks:
@@ -29,10 +32,13 @@ class BankController:
             return None
 
     def create_client(self, name, client_type):
-        if client_type == 1:
-            client = PhysicalPerson(name)
-        elif client_type == 2:
-            client = LegalPerson(name)
+        if name != None and name != "":
+            if client_type == 1:
+                client = PhysicalPerson(name)
+            elif client_type == 2:
+                client = LegalPerson(name)
+            else:
+                return None
         else:
             return None
         
@@ -93,4 +99,9 @@ class BankController:
             if c == client:
                 return idx
         return None
+    def get_bank_by_id(self, bank_id):
+        if bank_id < 0 or bank_id >= len(self.banks):
+            return None
+        return self.banks[bank_id]
+
 

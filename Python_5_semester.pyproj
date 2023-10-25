@@ -30,6 +30,7 @@
     <Compile Include="Interface\BanksMenu\SelectedBankMenu\bank_menu_selected_bank.py" />
     <Compile Include="Interface\BanksMenu\SelectedBankMenu\delete_client_menu.py" />
     <Compile Include="Interface\BanksMenu\SelectedBankMenu\register_client_menu.py" />
+    <Compile Include="Interface\BanksMenu\SelectedBankMenu\view_funds_menu.py" />
     <Compile Include="Interface\BanksMenu\SelectedBankMenu\__init__.py" />
     <Compile Include="Interface\BanksMenu\select_bank_menu.py" />
     <Compile Include="Interface\BanksMenu\__init__.py" />
@@ -37,6 +38,7 @@
     <Compile Include="Interface\ClientsMenu\SelectedClientMenu\client_menu_selected_client.py" />
     <Compile Include="Interface\ClientsMenu\SelectedClientMenu\deposit_money_menu.py" />
     <Compile Include="Interface\ClientsMenu\SelectedClientMenu\transfer_money_menu.py" />
+    <Compile Include="Interface\ClientsMenu\SelectedClientMenu\view_account_menu.py" />
     <Compile Include="Interface\ClientsMenu\SelectedClientMenu\withdraw_money_menu.py" />
     <Compile Include="Interface\ClientsMenu\SelectedClientMenu\__init__.py" />
     <Compile Include="Interface\ClientsMenu\select_client_menu.py" />

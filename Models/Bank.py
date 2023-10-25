@@ -25,30 +25,27 @@ class Bank:
     def transfer_money(self, sender, receiver_bank, receiver, amount):
         sender_account = sender.get_bank_account(self)
         receiver_account = receiver.get_bank_account(receiver_bank)
-        
+        fee = self.calculate_transfer_fee(amount)
         if (
-            isinstance(sender, Client) and
-            isinstance(receiver, Client) and
             sender_account and receiver_account and  # Проверяем, что у отправителя и получателя есть счета в соответствующих банках
-            sender_account.balance >= amount and
+            sender_account.balance >= amount+fee and
             (
                 (
-                    isinstance(sender, LegalPerson) and (sender != receiver) and (self != receiver_bank)
+                    isinstance(sender, LegalPerson) and (sender != receiver)
                 ) or
                 (
-                    sender != receiver and self == receiver_bank
+                    isinstance(sender, LegalPerson) and (sender == receiver) and (self != receiver_bank)
                 ) or
                 (
-                    sender == receiver and self != receiver_bank
+                   isinstance(sender, PhysicalPerson) and (sender != receiver) and (self == receiver_bank)
                 )
+                
             )
         ):
-            fee = self.calculate_transfer_fee(amount)
+            
             sender_account.withdraw(amount+fee)
-            receiver_bank.receive_transfer(amount-fee)
             self.collect_transfer_fee(fee)
-            self.own_funds -= amount
-            receiver_account.deposit(amount-fee)
+            receiver_account.deposit(amount)
             return True
         else:
             return False
@@ -65,3 +62,7 @@ class Bank:
         
     def get_clients(self):
         return self.clients.copy()
+    def get_funds(self):
+        return self.own_funds
+    def get_name(self):
+        return self.name

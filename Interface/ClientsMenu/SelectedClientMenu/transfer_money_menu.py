@@ -38,7 +38,8 @@ def transfer_money_menu(controller, sender, sender_id):
             if sender_bank_id and receiver_bank_id is not None:
                 amount = float(input("Введите сумму в рублях: "))
                 if controller.transfer_money(int(sender_id), int(sender_bank_id), int(receiver_id), amount, int(receiver_bank_id)):
-                    print(f"Сумма {amount} успешно переведена с клиента '{sender.name}' на клиента '{receiver.name}'.")
+                    print(f"Сумма {amount} успешно переведена с клиента '{sender.name}' банка '{controller.get_bank_by_id(int(sender_bank_id)).get_name()}' на клиента '{receiver.name}' банка '{controller.get_bank_by_id(int(receiver_bank_id)).get_name()}'.")
+                    print(f"Коммиссия составила {controller.get_bank_by_id(int(sender_bank_id)).calculate_transfer_fee(amount)} рублей.")
                 else:
                     print("Ошибка при переводе средств.")
             else:
