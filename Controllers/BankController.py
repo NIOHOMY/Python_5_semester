@@ -79,7 +79,7 @@ class BankController:
         if not sender_bank or not sender:
             return False
             
-        if not receiver_bank_id:
+        if receiver_bank_id is None:
             receiver_bank_id = sender_bank_id
         
         receiver_bank = self.select_bank(receiver_bank_id)
