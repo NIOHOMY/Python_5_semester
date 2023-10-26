@@ -147,7 +147,7 @@ class TestBankController(unittest.TestCase):
         result = self.controller.transfer_money(self.controller.get_client_id(client1), self.controller.get_bank_id(sender_bank), self.controller.get_client_id(client2), amount_to_transfer, self.controller.get_bank_id(sender_bank))
         self.assertTrue(result)
         self.assertEqual(sender_account.get_balance(), sender_amount - amount_to_transfer - (sender_bank.calculate_transfer_fee(amount_to_transfer)))
-        self.assertEqual(receiver_account.get_balance(), amount_to_transfer -  (sender_bank.calculate_transfer_fee(amount_to_transfer)))
+        self.assertEqual(receiver_account.get_balance(), amount_to_transfer)
 
     def test_transfer_money_different_banks(self):
         sender_bank_name = "Test Bank 1"

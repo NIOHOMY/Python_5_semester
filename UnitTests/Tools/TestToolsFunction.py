@@ -12,6 +12,8 @@ from Interface.Tools.print_banks import print_banks
 from Interface.Tools.print_banks_by_indices import print_banks_by_indices 
 from Interface.Tools.print_banks_clients import print_banks_clients
 from Interface.Tools.print_clients import print_clients
+from Interface.Tools.input_integer_non_negative_numbers import input_integer_non_negative_numbers
+from Interface.Tools.input_float_non_negative_numbers import input_float_non_negative_numbers
 
 """
 Тест test_choose_account_valid_choice проверяет, что функция choose_account корректно выбирает счет клиента из списка, когда пользователь вводит допустимый выбор.
@@ -139,6 +141,54 @@ class TestToolsFunctions(unittest.TestCase):
             unittest.mock.call("ID: 0, Имя: Client 1"),
             unittest.mock.call("ID: 1, Имя: Client 2")
         ])
+        
+    def test_input_float_negative_numbers(self):
+        # Тестирование некорректного ввода отрицательного числа
+        with unittest.mock.patch('builtins.input', return_value='-5'):
+            result = input_float_non_negative_numbers()
+            self.assertIsNone(result)
+
+    def test_input_float_non_numeric_characters(self):
+        # Тестирование некорректного ввода буквенных символов
+        with unittest.mock.patch('builtins.input', return_value='abc'):
+            result = input_float_non_negative_numbers()
+            self.assertIsNone(result)
+
+    def test_input_float_positive_number(self):
+        # Тестирование корректного ввода положительного числа
+        with unittest.mock.patch('builtins.input', return_value='3.14'):
+            result = input_float_non_negative_numbers()
+            self.assertEqual(result, 3.14)
+
+    def test_input_float_zero(self):
+        # Тестирование корректного ввода нуля
+        with unittest.mock.patch('builtins.input', return_value='0'):
+            result = input_float_non_negative_numbers()
+            self.assertEqual(result, 0)
+
+    def test_input_integer_negative_numbers(self):
+        # Тестирование некорректного ввода отрицательного числа
+        with unittest.mock.patch('builtins.input', return_value='-5'):
+            result = input_integer_non_negative_numbers()
+            self.assertIsNone(result)
+
+    def test_input_integer_non_numeric_characters(self):
+        # Тестирование некорректного ввода буквенных символов
+        with unittest.mock.patch('builtins.input', return_value='abc'):
+            result = input_integer_non_negative_numbers()
+            self.assertIsNone(result)
+
+    def test_input_integer_positive_number(self):
+        # Тестирование корректного ввода положительного числа
+        with unittest.mock.patch('builtins.input', return_value='42'):
+            result = input_integer_non_negative_numbers()
+            self.assertEqual(result, 42)
+
+    def test_input_integer_zero(self):
+        # Тестирование корректного ввода нуля
+        with unittest.mock.patch('builtins.input', return_value='0'):
+            result = input_integer_non_negative_numbers()
+            self.assertEqual(result, 0)
 
 
 
