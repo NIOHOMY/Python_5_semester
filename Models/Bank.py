@@ -1,4 +1,5 @@
-﻿from Models.Client import Client
+﻿import traceback
+from Models.Client import Client
 from Models.Account import Account
 from Models.Persons.LegalPerson import LegalPerson
 from Models.Persons.PhysicalPerson import PhysicalPerson
@@ -23,32 +24,37 @@ class Bank:
             self.clients.remove(client)
 
     def transfer_money(self, sender, receiver_bank, receiver, amount):
-        sender_account = sender.get_bank_account(self)
-        receiver_account = receiver.get_bank_account(receiver_bank)
-        fee = self.calculate_transfer_fee(amount)
-        if (
-            sender_account and receiver_account and  # Проверяем, что у отправителя и получателя есть счета в соответствующих банках
-            sender_account.balance >= amount+fee and
-            (
+        try:
+        
+            sender_account = sender.get_bank_account(self)
+            receiver_account = receiver.get_bank_account(receiver_bank)
+            fee = self.calculate_transfer_fee(amount)
+            if (
+                sender_account and receiver_account and  # Проверяем, что у отправителя и получателя есть счета в соответствующих банках
+                sender_account.balance >= amount+fee and
                 (
-                    isinstance(sender, LegalPerson) and (sender != receiver)
-                ) or
-                (
-                    isinstance(sender, LegalPerson) and (sender == receiver) and (self != receiver_bank)
-                ) or
-                (
-                   isinstance(sender, PhysicalPerson) and (sender != receiver) and (self == receiver_bank)
-                )
+                    (
+                        isinstance(sender, LegalPerson) and (sender != receiver)
+                    ) or
+                    (
+                        isinstance(sender, LegalPerson) and (sender == receiver) and (self != receiver_bank)
+                    ) or
+                    (
+                       isinstance(sender, PhysicalPerson) and (sender != receiver) and (self == receiver_bank)
+                    )
                 
-            )
-        ):
+                )
+            ):
             
-            sender_account.withdraw(amount+fee)
-            self.collect_transfer_fee(fee)
-            receiver_account.deposit(amount)
-            return True
-        else:
-            return False
+                sender_account.withdraw(amount+fee)
+                self.collect_transfer_fee(fee)
+                receiver_account.deposit(amount)
+                return True
+            else:
+                return False
+        except Exception as e:
+                traceback.print_exc()
+                return False
 
 
     def calculate_transfer_fee(self, amount):

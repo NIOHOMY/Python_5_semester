@@ -45,6 +45,8 @@
     <Compile Include="Interface\ClientsMenu\create_client_menu.py" />
     <Compile Include="Interface\ClientsMenu\delete_client_menu.py" />
     <Compile Include="Interface\ClientsMenu\__init__.py" />
+    <Compile Include="Interface\Tools\input_integer_non_negative_numbers.py" />
+    <Compile Include="Interface\Tools\input_float_non_negative_numbers.py" />
     <Compile Include="Interface\Tools\print_banks.py" />
     <Compile Include="Interface\Tools\print_banks_by_indices.py" />
     <Compile Include="Interface\Tools\print_banks_clients.py" />
