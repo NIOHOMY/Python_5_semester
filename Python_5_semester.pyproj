@@ -54,6 +54,8 @@
     <Compile Include="Interface\Tools\print_clients.py" />
     <Compile Include="Interface\Tools\__init__.py" />
     <Compile Include="Models\Account.py" />
+    <Compile Include="Models\Accounts\BankAccount.py" />
+    <Compile Include="Models\Accounts\ClientAccount.py" />
     <Compile Include="Models\Bank.py" />
     <Compile Include="Models\Client.py" />
     <Compile Include="Models\Persons\LegalPerson.py" />
@@ -86,6 +88,7 @@
     <Folder Include="Interface\ClientsMenu\SelectedClientMenu\" />
     <Folder Include="Interface\Tools\" />
     <Folder Include="Models\" />
+    <Folder Include="Models\Accounts\" />
     <Folder Include="Models\Persons\" />
     <Folder Include="Interface\" />
   </ItemGroup>

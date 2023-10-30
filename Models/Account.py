@@ -1,26 +1,24 @@
-﻿class Account:
+﻿from abc import ABC, abstractmethod
+
+class Account(ABC):
     def __init__(self, bank):
         self.balance = 0
         self.bank = bank
 
+    @abstractmethod
     def deposit(self, amount):
-        if amount > 0:  # Проверяем, что сумма для депозита положительная
-            self.balance += amount
-            self.bank.receive_transfer(amount)
-            return True
-        else:
-            return False
+        pass
 
+    @abstractmethod
     def withdraw(self, amount):
-        if amount > 0 and self.balance >= amount:  # Проверяем, что запрашиваемая сумма для снятия положительная и не превышает баланс
-            self.balance -= amount
-            self.bank.receive_transfer(-amount)
-            return True
-        else:
-            return False
-        
+        pass
+
+    @abstractmethod
+    def transfer_money(self, receiver_bank, receiver, amount):
+        pass
+
     def get_bank(self):
         return self.bank
+
     def get_balance(self):
         return self.balance
-    

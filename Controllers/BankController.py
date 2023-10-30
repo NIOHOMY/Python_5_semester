@@ -86,9 +86,12 @@ class BankController:
         receiver = self.select_client(receiver_id)
         
         if receiver_bank and receiver:
-            return sender_bank.transfer_money(sender, receiver_bank, receiver, amount)
-            
+            sender_account = sender.get_bank_account(sender_bank)            
+            receiver_account = receiver.get_bank_account(receiver_bank) 
+            if sender_account and receiver_account:
+                return sender_account.transfer_money(sender, receiver_account, receiver, amount)
         return False
+    
     def get_bank_id(self, bank):
         for idx, b in enumerate(self.banks):
             if b == bank:
