@@ -1,4 +1,6 @@
 ﻿import traceback
+from Models.Bank import Bank
+from Controllers.BankController import BankController
 
 def print_banks_by_indices(controller, indices):
     try:

@@ -1,4 +1,6 @@
 ﻿import traceback
+from Controllers.BankController import BankController
+from Models.Bank import Bank
 def create_bank_menu(controller):
     try:
         name = input("Введите название банка: ")

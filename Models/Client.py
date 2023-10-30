@@ -1,4 +1,4 @@
-﻿
+﻿from Models.Account import Account
 
 class Client:
     def __init__(self, name):
@@ -12,7 +12,7 @@ class Client:
         for account in self.bank_accounts:
             if account.get_bank() == bank:
                 self.bank_accounts.remove(account)
-                return True
+                return
         
     def get_bank_account(self, bank):
         for account in self.bank_accounts:

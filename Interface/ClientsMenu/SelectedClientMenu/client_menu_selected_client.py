@@ -2,7 +2,8 @@
 from ...ClientsMenu.SelectedClientMenu.withdraw_money_menu import withdraw_money_menu
 from ...ClientsMenu.SelectedClientMenu.transfer_money_menu import transfer_money_menu
 from ...ClientsMenu.SelectedClientMenu.view_account_menu import view_account_menu
-
+from Controllers.BankController import BankController
+from Models.Client import Client
 
 def client_menu_selected_client(controller, client, client_id):
     while True:

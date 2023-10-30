@@ -1,4 +1,7 @@
 ﻿import traceback
+from Controllers.BankController import BankController
+from Models.Client import Client
+from Models.Bank import Bank
 from ...Tools.print_banks_by_indices import print_banks_by_indices
 from ...Tools.print_clients import print_clients
 from Interface.Tools.input_float_non_negative_numbers import input_float_non_negative_numbers

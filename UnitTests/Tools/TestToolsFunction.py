@@ -15,6 +15,21 @@ from Interface.Tools.print_clients import print_clients
 from Interface.Tools.input_integer_non_negative_numbers import input_integer_non_negative_numbers
 from Interface.Tools.input_float_non_negative_numbers import input_float_non_negative_numbers
 
+"""
+Тест test_choose_account_valid_choice проверяет, что функция choose_account корректно выбирает счет клиента из списка, когда пользователь вводит допустимый выбор.
+
+Тест test_choose_account_invalid_choice проверяет, что функция choose_account правильно обрабатывает недопустимый выбор от пользователя и просит повторить ввод, пока не будет указан допустимый выбор.
+
+Тест test_choose_account_no_accounts проверяет, что функция choose_account правильно обрабатывает случай, когда у клиента нет открытых счетов. В этом случае функция должна вывести сообщение об отсутствии счетов и вернуть None.
+
+Тесты test_print_banks и test_print_banks_empty_list проверяют, что функция print_banks правильно выводит список банков или сообщение о пустом списке банков.
+
+Тест test_print_banks_by_indices проверяет, что функция print_banks_by_indices правильно выводит список банков на основе указанных индексов банков.
+
+Тесты test_print_banks_clients и test_print_banks_clients_empty_list проверяют, что функция print_banks_clients правильно выводит список клиентов определенного банка или сообщение о пустом списке клиентов.
+
+Тест test_print_clients проверяет, что функция print_clients правильно выводит список всех клиентов в системе.
+"""
 
 class TestToolsFunctions(unittest.TestCase):
 
@@ -36,6 +51,9 @@ class TestToolsFunctions(unittest.TestCase):
         self.account2_bank1 = self.client1.get_bank_account(self.bank1)
         self.account1_bank2 = self.client2.get_bank_account(self.bank2)
 
+        # self.client1.add_account(self.account1_bank1)
+        # self.client1.add_account(self.account2_bank1)
+        # self.client2.add_account(self.account1_bank2)
 
         self.controller = BankController()
         self.controller.create_bank("Bank 1")
@@ -45,7 +63,7 @@ class TestToolsFunctions(unittest.TestCase):
         self.controller.create_client("Client 2", 1)
 
     def test_choose_account_valid_choice(self):
-        with patch('builtins.input', side_effect=['0']):
+        with patch('builtins.input', side_effect=['1']):
             chosen_account = choose_account(self.client1)
             self.assertEqual(chosen_account, self.account2_bank1)
 
@@ -53,7 +71,7 @@ class TestToolsFunctions(unittest.TestCase):
         mock_print = MagicMock(name="builtins.print")
         builtins.print = mock_print
         
-        with patch('builtins.input', side_effect=["-10", '0']):
+        with patch('builtins.input', side_effect=['0', '1']):
             chosen_account = choose_account(self.client1)
             mock_print.assert_called_with("Ошибка: введите корректный номер.")
             self.assertEqual(chosen_account, self.account2_bank1)

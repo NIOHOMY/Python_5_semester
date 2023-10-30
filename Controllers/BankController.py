@@ -1,3 +1,5 @@
+from Models.Client import Client
+from Models.Account import Account
 from Models.Bank import Bank
 from Models.Persons.LegalPerson import LegalPerson
 from Models.Persons.PhysicalPerson import PhysicalPerson
@@ -83,10 +85,10 @@ class BankController:
         receiver_bank = self.select_bank(receiver_bank_id)
         receiver = self.select_client(receiver_id)
         
-        if receiver_bank != None and receiver != None:
+        if receiver_bank and receiver:
             sender_account = sender.get_bank_account(sender_bank)            
             receiver_account = receiver.get_bank_account(receiver_bank) 
-            if sender_account != None and receiver_account != None:
+            if sender_account and receiver_account:
                 return sender_account.transfer_money(sender, receiver_account, receiver, amount)
         return False
     
