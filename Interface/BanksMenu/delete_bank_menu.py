@@ -1,7 +1,5 @@
 ﻿import traceback
 from ..Tools.print_banks import print_banks
-from Controllers.BankController import BankController
-from Models.Bank import Bank
 from Interface.Tools.input_integer_non_negative_numbers import input_integer_non_negative_numbers
 
 def delete_bank_menu(controller):

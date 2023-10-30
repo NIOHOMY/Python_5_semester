@@ -1,6 +1,4 @@
 ﻿from ..Tools.print_clients import print_clients
-from Controllers.BankController import BankController
-from Models.Client import Client
 from ..ClientsMenu.SelectedClientMenu.client_menu_selected_client import client_menu_selected_client
 from Interface.Tools.input_integer_non_negative_numbers import input_integer_non_negative_numbers
 

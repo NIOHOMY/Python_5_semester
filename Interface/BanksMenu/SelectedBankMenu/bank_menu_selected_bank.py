@@ -1,8 +1,6 @@
 ﻿from ...BanksMenu.SelectedBankMenu.register_client_menu import register_client_menu
 from ...BanksMenu.SelectedBankMenu.delete_client_menu import delete_client_menu
 from ...BanksMenu.SelectedBankMenu.view_funds_menu import view_funds_menu
-from Controllers.BankController import BankController
-from Models.Bank import Bank
 
 def bank_menu_selected_bank(controller, bank):
     while True:

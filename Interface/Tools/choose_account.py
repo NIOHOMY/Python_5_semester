@@ -1,7 +1,5 @@
 ﻿import traceback
-from Models.Client import Client
-from Models.Bank import Bank
-from Controllers.BankController import BankController
+from Interface.Tools.input_integer_non_negative_numbers import input_integer_non_negative_numbers
 
 def choose_account(client):
     """
@@ -13,20 +11,21 @@ def choose_account(client):
         account_map = {}  # Отображение для хранения связи между id и объектами аккаунтов
         print("Список ваших счетов:")
         for index, account in enumerate(client.bank_accounts):
-            account_map[index + 1] = account  # Добавляем элемент в отображение
-            print(f"{index + 1}) Банк: {account.get_bank().name}")
+            account_map[index] = account  # Добавляем элемент в отображение
+            print(f"{index}. Банк: {account.get_bank().name}")
     
         if len(account_map) == 0:
             print("У вас нет открытых счетов.")
             return None
     
         while True:
-            choice = input("Выберите номер счета: ")
-            try:
+            choice = input_integer_non_negative_numbers("Выберите номер счета: ")
+            if choice != None:
                 account = account_map[int(choice)]
                 return account
-            except (ValueError, KeyError):
-                print("Ошибка: введите корректный номер.")
+            
+            print("Ошибка: введите корректный номер.")
+            
         
     except Exception as e:
             traceback.print_exc()

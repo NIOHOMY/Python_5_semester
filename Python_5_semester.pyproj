@@ -13,6 +13,7 @@
     <RootNamespace>Python_5_semester</RootNamespace>
     <InterpreterId>Global|PythonCore|3.9</InterpreterId>
     <IsWindowsApplication>False</IsWindowsApplication>
+    <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +65,9 @@
     <Compile Include="Models\__init__.py" />
     <Compile Include="Python_5_semester.py" />
     <Compile Include="TODO.py" />
+    <Compile Include="UnitTests\Controllers\TestBankController.py" />
+    <Compile Include="UnitTests\Models\TestClientsAndTypesOfClients.py" />
+    <Compile Include="UnitTests\Tools\TestToolsFunction.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
@@ -78,6 +82,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Interface\Tools\choose_account.py" />
+    <Content Include="UnitTests\Controllers\__pycache__\TestBankController.cpython-36.pyc" />
+    <Content Include="UnitTests\Models\__pycache__\TestClientsAndTypesOfClients.cpython-36.pyc" />
+    <Content Include="UnitTests\Tools\__pycache__\TestToolsFunction.cpython-36.pyc" />
     <Content Include="Задача 2.pdf" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +98,13 @@
     <Folder Include="Models\Accounts\" />
     <Folder Include="Models\Persons\" />
     <Folder Include="Interface\" />
+    <Folder Include="UnitTests\" />
+    <Folder Include="UnitTests\Controllers\" />
+    <Folder Include="UnitTests\Controllers\__pycache__\" />
+    <Folder Include="UnitTests\Models\" />
+    <Folder Include="UnitTests\Models\__pycache__\" />
+    <Folder Include="UnitTests\Tools\" />
+    <Folder Include="UnitTests\Tools\__pycache__\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.9" />

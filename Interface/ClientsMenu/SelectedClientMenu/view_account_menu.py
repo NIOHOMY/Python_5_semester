@@ -1,6 +1,4 @@
 ﻿import traceback
-from Controllers.BankController import BankController
-from Models.Client import Client
 from Interface.Tools.choose_account import choose_account
 
 def view_account_menu(controller, client):
