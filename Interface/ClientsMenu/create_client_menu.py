@@ -1,6 +1,4 @@
 ﻿import traceback
-from Controllers.BankController import BankController
-from Models.Client import Client
 from Interface.Tools.input_integer_non_negative_numbers import input_integer_non_negative_numbers
 
 def create_client_menu(controller):

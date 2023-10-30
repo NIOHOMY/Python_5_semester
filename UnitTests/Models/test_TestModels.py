@@ -1,6 +1,6 @@
 ﻿import unittest
 from unittest.mock import patch
-from unittest.mock import Mock
+from mock import Mock
 from Models.Accounts.BankAccount import BankAccount
 from Models.Accounts.ClientAccount import ClientAccount
 from Models.Bank import Bank

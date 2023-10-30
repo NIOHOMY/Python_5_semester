@@ -1,7 +1,6 @@
 ﻿from ..ClientsMenu.create_client_menu import create_client_menu
 from ..ClientsMenu.delete_client_menu import delete_client_menu
 from ..ClientsMenu.select_client_menu import select_client_menu
-from Controllers.BankController import BankController
 
 def client_menu(controller):
     while True:

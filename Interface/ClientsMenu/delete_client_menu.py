@@ -1,6 +1,4 @@
 ﻿from ..Tools.print_clients import print_clients
-from Controllers.BankController import BankController
-from Models.Client import Client
 from Interface.Tools.input_integer_non_negative_numbers import input_integer_non_negative_numbers
 
 def delete_client_menu(controller):

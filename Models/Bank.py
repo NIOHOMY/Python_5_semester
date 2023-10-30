@@ -1,9 +1,4 @@
-﻿import re
-import traceback
-from Models.Account import Account
-from Models.Client import Client
-from Models.Persons.LegalPerson import LegalPerson
-from Models.Persons.PhysicalPerson import PhysicalPerson
+﻿import traceback
 from Models.Accounts.BankAccount import BankAccount
 from Models.Accounts.ClientAccount import ClientAccount
 
