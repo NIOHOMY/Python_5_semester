@@ -1,6 +1,4 @@
 ﻿import traceback
-from Controllers.BankController import BankController
-from Models.Client import Client
 from ...Tools.choose_account import choose_account
 from Interface.Tools.input_float_non_negative_numbers import input_float_non_negative_numbers
 

@@ -1,8 +1,5 @@
 ﻿import traceback
-from Models.Client import Client
-#from Models.Bank import Bank
 from Models.Account import Account
-from Models.Accounts.BankAccount import BankAccount
 from Models.Persons.LegalPerson import LegalPerson
 from Models.Persons.PhysicalPerson import PhysicalPerson
 
@@ -28,32 +25,32 @@ class ClientAccount(Account):
         try:
         
             fee = self.bank.calculate_transfer_fee(amount)
-            if (
-                receiver_account and  # Проверяем, что у получателя есть счет в соответствующем банке
-                self.balance >= amount+fee and
-                (
+            if receiver_account != None:    # Проверяем, что у получателя есть счет в соответствующем банке
+                if (
+                    self.balance >= amount+fee and
                     (
-                        isinstance(sender, LegalPerson) and (sender != receiver)
-                    ) or
-                    (
-                        isinstance(sender, LegalPerson) and (sender == receiver) and (self.bank != receiver_account.get_bank())
-                    ) or
-                    (
-                       isinstance(sender, PhysicalPerson) and (sender != receiver) and (self.bank == receiver_account.get_bank())
-                    )
+                        (
+                            isinstance(sender, LegalPerson) and (sender != receiver)
+                        ) or
+                        (
+                            isinstance(sender, LegalPerson) and (sender == receiver) and (self.bank != receiver_account.get_bank())
+                        ) or
+                        (
+                           isinstance(sender, PhysicalPerson) and (sender != receiver) and (self.bank == receiver_account.get_bank())
+                        )
                 
-                )
-            ):
+                    )
+                ):
             
-                self.withdraw(amount+fee)
-                self.bank.collect_transfer_fee(fee)
-                receiver_account.deposit(amount)
-                return True
-            else:
-                return False
+                    self.withdraw(amount+fee)
+                    self.bank.collect_transfer_fee(fee)
+                    receiver_account.deposit(amount)
+                    return True
+                
+            return False
         except Exception as e:
                 traceback.print_exc()
-                return False
+                return None
         
     def get_bank(self):
         return self.bank

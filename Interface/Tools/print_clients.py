@@ -1,6 +1,4 @@
 ﻿import traceback
-from Models.Client import Client
-from Controllers.BankController import BankController
 
 def print_clients(controller):
     try:

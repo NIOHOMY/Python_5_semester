@@ -1,146 +1,249 @@
 ﻿import unittest
+from unittest.mock import patch
+from mock import Mock
+from Models.Accounts.BankAccount import BankAccount
+from Models.Accounts.ClientAccount import ClientAccount
 from Models.Bank import Bank
 from Models.Client import Client
 from Models.Persons.LegalPerson import  LegalPerson
 from Models.Persons.PhysicalPerson import PhysicalPerson
-from Models.Account import Account
+
+class TestBankAccount(unittest.TestCase):
+    def setUp(self):
+        self.bank_account = BankAccount(Mock())
+
+    def test_deposit_with_positive_amount_should_increase_balance(self):
+        self.bank_account.deposit(100)
+        self.assertEqual(self.bank_account.get_balance(), 100)
+
+    def test_deposit_with_negative_amount_should_not_change_balance(self):
+        self.bank_account.deposit(-100)
+        self.assertEqual(self.bank_account.get_balance(), 0)
+
+    def test_withdraw_with_sufficient_balance_and_positive_amount_should_decrease_balance(self):
+        self.bank_account.deposit(200)
+        self.bank_account.withdraw(100)
+        self.assertEqual(self.bank_account.get_balance(), 100)
+
+    def test_withdraw_with_insufficient_balance_should_not_change_balance(self):
+        self.bank_account.deposit(50)
+        self.bank_account.withdraw(100)
+        self.assertEqual(self.bank_account.get_balance(), 50)
+
+class TestClientAccount(unittest.TestCase):
+    def setUp(self):
+        self.bank = Mock()
+        self.bank_account = Mock()
+        self.bank.get_bank_account.return_value = self.bank_account
+        self.client_account = ClientAccount(self.bank)
+
+    def test_deposit_with_positive_amount_should_increase_client_balance_and_bank_balance(self):
+        result = self.client_account.deposit(100)
+        self.assertEqual(self.client_account.get_balance(), 100)
+        self.bank_account.deposit.assert_called_with(100)
+        self.bank.get_bank_account.assert_called_once()
+        self.assertEqual(result, True)
+
+    def test_deposit_with_negative_amount_should_not_change_balances(self):
+        result = self.client_account.deposit(-100)
+        self.assertEqual(self.client_account.get_balance(), 0)
+        self.bank.get_bank_account.assert_not_called()
+        self.assertEqual(result, False)
+
+    def test_withdraw_with_sufficient_balance_and_positive_amount_should_decrease_client_balance_and_bank_balance(self):
+        self.client_account.deposit(200)
+        result = self.client_account.withdraw(100)
+        self.assertEqual(self.client_account.get_balance(), 100)
+        self.bank_account.withdraw.assert_called_with(100)
+        self.assertEqual(result, True)
+
+    def test_withdraw_with_insufficient_balance_should_not_change_balances(self):
+        self.client_account.deposit(50)
+        result = self.client_account.withdraw(100)
+        self.assertEqual(self.client_account.get_balance(), 50)
+        self.assertEqual(result, False)
+
+    #@patch('Models.Accounts.BankAccount')
+    def test_transfer_money_with_valid_parameters_should_withdraw_from_sender_and_deposit_to_receiver(self):
+        sender_bank = Mock()
+        sender = PhysicalPerson("c1") 
+        receiver = PhysicalPerson("c2")
+        sender_account = ClientAccount(sender_bank)
+        receiver_account = ClientAccount(sender_bank)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(200)
+        result = sender_account.transfer_money(sender, receiver_account, receiver, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 100-1)
+        sender_bank.collect_transfer_fee.assert_called_with(1)
+        self.assertEqual(receiver_account.get_balance(), 100)
+        self.assertEqual(result, True)
+
+    def test_transfer_money_with_invalid_parameters_should_not_change_balances(self):
+        sender_bank = Mock()
+        sender = PhysicalPerson("c1") 
+        receiver = PhysicalPerson("c2")
+        sender_account = ClientAccount(sender_bank)
+        receiver_account = ClientAccount(sender_bank)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(50)
+        result = sender_account.transfer_money(sender, receiver_account, receiver, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 50)
+        
+        self.assertEqual(receiver_account.get_balance(), 0) 
+        self.assertEqual(result, False)
+        
+
+    def test_transfer_money_with_invalid_parameters_should_not_make_transfer(self):
+        sender_bank = Mock()
+        sender = PhysicalPerson("c1") 
+        receiver = PhysicalPerson("c2")
+        sender_account = ClientAccount(sender_bank)
+        receiver_account = None
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(500)
+        result = sender_account.transfer_money(sender, receiver_account, receiver, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 500)
+        self.assertEqual(result, False)
+        
+
+    def test_transfer_money_with_valid_parameters_should_withdraw_from_legalsender_and_deposit_to_another_bank_receiver(self):
+        sender_bank = Mock()
+        receiver_bank = Mock()
+        sender = LegalPerson("c1") 
+        receiver = PhysicalPerson("c2")
+        sender_account = ClientAccount(sender_bank)
+        receiver_account = ClientAccount(receiver_bank)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(200)
+        result = sender_account.transfer_money(sender, receiver_account, receiver, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 100-1)
+        sender_bank.collect_transfer_fee.assert_called_with(1)
+        self.assertEqual(receiver_account.get_balance(), 100)
+        self.assertEqual(result, True)
+        
+    def test_transfer_money_with_valid_parameters_should_withdraw_from_legalsender_and_deposit_to_sender_another_bank(self):
+        sender_bank = Mock()
+        sender_bank2 = Mock()
+        sender = LegalPerson("c1")
+        sender_account = ClientAccount(sender_bank)
+        sender_account2 = ClientAccount(sender_bank2)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(200)
+        result = sender_account.transfer_money(sender, sender_account2, sender, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 100-1)
+        sender_bank.collect_transfer_fee.assert_called_with(1)
+        self.assertEqual(sender_account2.get_balance(), 100)
+        self.assertEqual(result, True)
 
 class TestBank(unittest.TestCase):
     def setUp(self):
-        self.bank = Bank('ABC Bank')
+        self.bank = Bank("Test Bank")
 
-    def test_add_client(self):
-        client = Client('John')
-        result = self.bank.add_client(client)
-        self.assertTrue(result)
+    def test_add_client_should_add_client_to_bank(self):
+        client = Mock()
+        self.bank.add_client(client)
         self.assertIn(client, self.bank.get_clients())
 
-    def test_add_existing_client(self):
-        client = Client('John')
+    """
+    def test_add_client_should_add_client_account_to_client(self):
+        client = Mock()
+        self.bank.add_client(client)
+        client.add_account.assert_called_with(Mock(self.bank))
+    """
+    def test_add_client_should_add_client_account_to_client(self):
+        client = Mock()
+        self.bank.add_client(client)
+        client.add_account.assert_called_once()
+
+    def test_add_client_should_not_add_duplicate_client(self):
+        client = Mock()
         self.bank.add_client(client)
         result = self.bank.add_client(client)
         self.assertFalse(result)
 
-    def test_remove_client(self):
-        client = Client('John')
+    def test_remove_client_should_remove_client_from_bank(self):
+        client = Mock()
         self.bank.add_client(client)
         self.bank.remove_client(client)
         self.assertNotIn(client, self.bank.get_clients())
 
-    def test_transfer_money_valid(self):
-        sender_bank = Bank('Sender Bank')
-        receiver_bank = Bank('Receiver Bank')
-        sender = LegalPerson('John')
-        receiver = LegalPerson('Jane')
+    def test_remove_client_should_delete_client_account_from_client(self):
+        client = Mock()
+        self.bank.add_client(client)
+        self.bank.remove_client(client)
+        client.delete_account.assert_called_with(self.bank)
         
-        sender_bank.add_client(sender)
-        receiver_bank.add_client(receiver)
-        sender_account = sender.get_bank_account(sender_bank)
-        receiver_account = receiver.get_bank_account(receiver_bank)
-        sender_account.deposit(1000)
-        result = sender_bank.transfer_money(sender, receiver_bank, receiver, 500)
-        self.assertTrue(result)
-        self.assertEqual(sender_account.get_balance(), 500-sender_bank.calculate_transfer_fee(500))
-        self.assertEqual(receiver_account.get_balance(), 500)
+    def test_remove_client_shouldnt_remove_client_from_bank(self):
+        client = Mock()
+        self.bank.remove_client(client)
+        self.assertNotIn(client, self.bank.get_clients())
 
-    def test_transfer_money_insufficient_funds(self):
-        sender_bank = Bank('Sender Bank')
-        receiver_bank = Bank('Receiver Bank')
-        sender = LegalPerson('John')
-        receiver = LegalPerson('Jane')
-        sender_account = Account(sender_bank)
-        receiver_account = Account(receiver_bank)
-        sender.add_account(sender_account)
-        receiver.add_account(receiver_account)
-        sender_account.deposit(100)
-        result = self.bank.transfer_money(sender, receiver_bank, receiver, 500)
-        self.assertFalse(result)
-        self.assertEqual(sender_account.get_balance(), 100)
-        self.assertEqual(receiver_account.get_balance(), 0)
+    def test_calculate_transfer_fee_should_return_correct_fee(self):
+        fee = self.bank.calculate_transfer_fee(100)
+        self.assertEqual(fee, 1.0)
 
-    def test_transfer_money_invalid_sender(self):
-        sender_bank = Bank('Sender Bank')
-        receiver_bank = Bank('Receiver Bank')
-        sender = PhysicalPerson('John')
-        receiver = LegalPerson('Jane')
-        sender_account = Account(sender_bank)
-        receiver_account = Account(receiver_bank)
-        sender.add_account(sender_account)
-        receiver.add_account(receiver_account)
-        sender_account.deposit(1000)
-        result = self.bank.transfer_money(sender, receiver_bank, receiver, 500)
-        self.assertFalse(result)
-        self.assertEqual(sender_account.get_balance(), 1000)
-        self.assertEqual(receiver_account.get_balance(), 0)
+    def test_collect_transfer_fee_should_increase_bank_funds(self):
+        self.bank.collect_transfer_fee(10)
+        self.assertEqual(self.bank.get_funds(), 10)
 
-    def test_calculate_transfer_fee(self):
-        amount = 1000
-        expected_fee = 0.01 * amount
-        result = self.bank.calculate_transfer_fee(amount)
-        self.assertEqual(result, expected_fee)
+    def test_get_bank_account_should_return_own_funds_account(self):
+        bank_account = self.bank.get_bank_account()
+        self.assertEqual(bank_account, self.bank.own_funds)
 
-    def test_collect_transfer_fee(self):
-        fee = 10
-        self.bank.collect_transfer_fee(fee)
-        self.assertEqual(self.bank.get_funds(), fee)
+    def test_get_name_should_return_bank_name(self):
+        name = self.bank.get_name()
+        self.assertEqual(name, "Test Bank")
 
-class TestAccount(unittest.TestCase):
-    def setUp(self):
-        self.bank = Bank('ABC Bank')
-        self.account = Account(self.bank)
-
-    def test_deposit_valid(self):
-        amount = 1000
-        result = self.account.deposit(amount)
-        self.assertTrue(result)
-        self.assertEqual(self.account.get_balance(), amount)
-        self.assertEqual(self.bank.get_funds(), amount)
-
-    def test_deposit_invalid_amount(self):
-        amount = -100
-        result = self.account.deposit(amount)
-        self.assertFalse(result)
-        self.assertEqual(self.account.get_balance(), 0)
-        self.assertEqual(self.bank.get_funds(), 0)
-
-    def test_withdraw_valid(self):
-        self.account.deposit(1000)
-        amount = 500
-        result = self.account.withdraw(amount)
-        self.assertTrue(result)
-        self.assertEqual(self.account.get_balance(), 500)
-        self.assertEqual(self.bank.get_funds(), 500)
-
-    def test_withdraw_insufficient_funds(self):
-        self.account.deposit(100)
-        amount = 500
-        result = self.account.withdraw(amount)
-        self.assertFalse(result)
-        self.assertEqual(self.account.get_balance(), 100)
-        self.assertEqual(self.bank.get_funds(), 100)
 
 class TestClient(unittest.TestCase):
     def setUp(self):
         self.client = Client('John')
-        self.bank = Bank('ABC Bank')
-        self.account = Account(self.bank)
 
     def test_add_account(self):
-        self.client.add_account(self.account)
-        self.assertIn(self.account, self.client.bank_accounts)
+        bank = Mock()
+        account = Mock()
+        self.client.add_account(account)
+        self.assertIn(account, self.client.bank_accounts)
 
     def test_delete_account(self):
-        self.client.add_account(self.account)
-        self.client.delete_account(self.bank)
-        self.assertNotIn(self.account, self.client.bank_accounts)
+        self.account1 = Mock()
+        self.account2 = Mock()
+        self.client.add_account(self.account1)
+        self.client.add_account(self.account2)
+        bank = Mock()
+        self.account2.get_bank.return_value = bank
+
+        result = self.client.delete_account(bank)
+
+        self.assertNotIn(self.account2, self.client.bank_accounts)
+        self.assertIn(self.account1, self.client.bank_accounts)
+        self.assertEqual(result, True)
 
     def test_get_bank_account_existing(self):
-        self.client.add_account(self.account)
-        result = self.client.get_bank_account(self.bank)
-        self.assertEqual(result, self.account)
+        self.account1 = Mock()
+        self.account2 = Mock()
+        self.client.add_account(self.account1)
+        self.client.add_account(self.account2)
+        bank = Mock()
+        self.account2.get_bank.return_value = bank
+
+        result = self.client.get_bank_account(bank)
+
+        self.assertEqual(result, self.account2)
 
     def test_get_bank_account_non_existing(self):
-        result = self.client.get_bank_account(self.bank)
+        bank = Mock()
+        result = self.client.get_bank_account(bank)
         self.assertIsNone(result)
 
 class TestLegalPerson(unittest.TestCase):
@@ -157,8 +260,6 @@ class TestPhysicalPerson(unittest.TestCase):
     def test_inheritance(self):
         self.assertIsInstance(self.person, Client)
 
-if __name__ == '__main__':
-    unittest.main()
 
 if __name__ == "__main__":
     unittest.main()
