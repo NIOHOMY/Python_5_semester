@@ -66,8 +66,8 @@ class TestClientAccount(unittest.TestCase):
     #@patch('Models.Accounts.BankAccount')
     def test_transfer_money_with_valid_parameters_should_withdraw_from_sender_and_deposit_to_receiver(self):
         sender_bank = Mock()
-        sender = PhysicalPerson("c1") 
-        receiver = PhysicalPerson("c2")
+        sender = Mock(spec=PhysicalPerson)
+        receiver = Mock(spec=PhysicalPerson)
         sender_account = ClientAccount(sender_bank)
         receiver_account = ClientAccount(sender_bank)
         
@@ -82,8 +82,8 @@ class TestClientAccount(unittest.TestCase):
 
     def test_transfer_money_with_invalid_parameters_should_not_change_balances(self):
         sender_bank = Mock()
-        sender = PhysicalPerson("c1") 
-        receiver = PhysicalPerson("c2")
+        sender = Mock(spec=PhysicalPerson)
+        receiver = Mock(spec=PhysicalPerson)
         sender_account = ClientAccount(sender_bank)
         receiver_account = ClientAccount(sender_bank)
         
@@ -96,11 +96,27 @@ class TestClientAccount(unittest.TestCase):
         self.assertEqual(receiver_account.get_balance(), 0) 
         self.assertEqual(result, False)
         
+    def test_transfer_money_with_invalid_parameters_should_not_change_balances_fee(self):
+        sender_bank = Mock()
+        sender = Mock(spec=PhysicalPerson)
+        receiver = Mock(spec=PhysicalPerson)
+        sender_account = ClientAccount(sender_bank)
+        receiver_account = ClientAccount(sender_bank)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(50)
+        result = sender_account.transfer_money(sender, receiver_account, receiver, 50)
+        
+        self.assertEqual(sender_account.get_balance(), 50)
+        
+        self.assertEqual(receiver_account.get_balance(), 0) 
+        self.assertEqual(result, False)
+        
 
     def test_transfer_money_with_invalid_parameters_should_not_make_transfer(self):
         sender_bank = Mock()
-        sender = PhysicalPerson("c1") 
-        receiver = PhysicalPerson("c2")
+        sender = Mock(spec=PhysicalPerson)
+        receiver = Mock(spec=PhysicalPerson)
         sender_account = ClientAccount(sender_bank)
         receiver_account = None
         
@@ -115,8 +131,8 @@ class TestClientAccount(unittest.TestCase):
     def test_transfer_money_with_valid_parameters_should_withdraw_from_legalsender_and_deposit_to_another_bank_receiver(self):
         sender_bank = Mock()
         receiver_bank = Mock()
-        sender = LegalPerson("c1") 
-        receiver = PhysicalPerson("c2")
+        sender = Mock(spec=LegalPerson)
+        receiver = Mock(spec=PhysicalPerson)
         sender_account = ClientAccount(sender_bank)
         receiver_account = ClientAccount(receiver_bank)
         
@@ -132,7 +148,7 @@ class TestClientAccount(unittest.TestCase):
     def test_transfer_money_with_valid_parameters_should_withdraw_from_legalsender_and_deposit_to_sender_another_bank(self):
         sender_bank = Mock()
         sender_bank2 = Mock()
-        sender = LegalPerson("c1")
+        sender = Mock(spec=LegalPerson)
         sender_account = ClientAccount(sender_bank)
         sender_account2 = ClientAccount(sender_bank2)
         
@@ -145,10 +161,23 @@ class TestClientAccount(unittest.TestCase):
         self.assertEqual(sender_account2.get_balance(), 100)
         self.assertEqual(result, True)
         
+    def test_transfer_money_with_invalid_parameters_shouldnt_withdraw_from_legalsender_and_deposit_to_sender_this_bank(self):
+        sender_bank = Mock()
+        sender = Mock(spec=LegalPerson)
+        sender_account = ClientAccount(sender_bank)
+        sender_account2 = ClientAccount(sender_bank)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(200)
+        result = sender_account.transfer_money(sender, sender_account2, sender, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 200)
+        self.assertEqual(result, False)
+        
     def test_transfer_money_with_valid_parameters_shouldnt_withdraw_from_nonlegalsender_and_deposit_to_sender_another_bank(self):
         sender_bank = Mock()
         sender_bank2 = Mock()
-        sender = PhysicalPerson("c1")
+        sender = Mock(spec=PhysicalPerson)
         sender_account = ClientAccount(sender_bank)
         sender_account2 = ClientAccount(sender_bank2)
         
@@ -164,8 +193,8 @@ class TestClientAccount(unittest.TestCase):
     def test_transfer_money_with_valid_parameters_shouldnt_withdraw_from_nonlegalsender_and_deposit_to_reciver_another_bank(self):
         sender_bank = Mock()
         receiver_bank = Mock()
-        sender = PhysicalPerson("c1") 
-        receiver = PhysicalPerson("c2")
+        sender = Mock(spec=PhysicalPerson)
+        receiver = Mock(spec=PhysicalPerson)
         sender_account = ClientAccount(sender_bank)
         receiver_account = ClientAccount(receiver_bank)
         
