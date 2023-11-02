@@ -20,8 +20,8 @@ def choose_account(client):
     
         while True:
             choice = input_integer_non_negative_numbers("Выберите номер счета: ")
-            if choice != None:
-                account = account_map[int(choice)]
+            if choice != None and choice>=0 and choice < len(account_map):
+                account = account_map[choice]
                 return account
             
             print("Ошибка: введите корректный номер.")

@@ -67,7 +67,8 @@
     <Compile Include="TODO.py" />
     <Compile Include="UnitTests\Controllers\TestBankController.py" />
     <Compile Include="UnitTests\Models\TestClientsAndTypesOfClients.py" />
-    <Compile Include="UnitTests\Tools\TestToolsFunction.py" />
+    <Compile Include="UnitTests\Tools\TestToolsFunctionsInput.py" />
+    <Compile Include="UnitTests\Tools\TestToolsFunctionChooseAccount.py" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">
