@@ -144,6 +144,39 @@ class TestClientAccount(unittest.TestCase):
         sender_bank.collect_transfer_fee.assert_called_with(1)
         self.assertEqual(sender_account2.get_balance(), 100)
         self.assertEqual(result, True)
+        
+    def test_transfer_money_with_valid_parameters_shouldnt_withdraw_from_nonlegalsender_and_deposit_to_sender_another_bank(self):
+        sender_bank = Mock()
+        sender_bank2 = Mock()
+        sender = PhysicalPerson("c1")
+        sender_account = ClientAccount(sender_bank)
+        sender_account2 = ClientAccount(sender_bank2)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(200)
+        result = sender_account.transfer_money(sender, sender_account2, sender, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 200)
+        #sender_bank.collect_transfer_fee.assert_called_with(1)
+        self.assertEqual(sender_account2.get_balance(), 0)
+        self.assertEqual(result, False)
+        
+    def test_transfer_money_with_valid_parameters_shouldnt_withdraw_from_nonlegalsender_and_deposit_to_reciver_another_bank(self):
+        sender_bank = Mock()
+        receiver_bank = Mock()
+        sender = PhysicalPerson("c1") 
+        receiver = PhysicalPerson("c2")
+        sender_account = ClientAccount(sender_bank)
+        receiver_account = ClientAccount(receiver_bank)
+        
+        sender_bank.calculate_transfer_fee.return_value = 1
+        sender_account.deposit(200)
+        result = sender_account.transfer_money(sender, receiver_account, receiver, 100)
+        
+        self.assertEqual(sender_account.get_balance(), 200)
+        #sender_bank.collect_transfer_fee.assert_called_with(1)
+        self.assertEqual(receiver_account.get_balance(), 0)
+        self.assertEqual(result, False)
 
 class TestBank(unittest.TestCase):
     def setUp(self):
